@@ -1,6 +1,8 @@
 import * as Bit from './Bit'
 import * as List from './List'
 
+export type Int16 = List.From<Bit.Bit, 16>
+
 export type Xor<X extends Bit.Bit[], Y extends Bit.Bit[]> = {
   [k in keyof X]:
     k extends (keyof Y) & `${number}`
@@ -24,6 +26,11 @@ export type Add<X extends Bit.Bit[], Y extends Bit.Bit[]> =
   1 extends Y[keyof Y]
     ? Add<Xor<X, Y>, ShiftLeft1<And<X, Y>>>
     : X
+
+export type Add16<X extends Int16, Y extends Int16> =
+  Add<X, Y> extends Int16
+    ? Add<X, Y>
+    : never
 
 type Flip<X extends Bit.Bit[]> = {
   [k in keyof X]:
