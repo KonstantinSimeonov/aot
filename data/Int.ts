@@ -1,4 +1,5 @@
-import * as Bit from './Bit';
+import * as Bit from './Bit'
+import * as List from './List'
 
 export type Xor<X extends Bit.Bit[], Y extends Bit.Bit[]> = {
   [k in keyof X]:
@@ -59,3 +60,8 @@ export type GTE<X, Y> =
   Y extends X
     ? true
     : GT<X, Y>
+
+export type Show<X extends Bit.Bit[]> =
+  X['length'] extends 0
+    ? ``
+    : `${X[0]}${Show<List.Tail<X>>}`
