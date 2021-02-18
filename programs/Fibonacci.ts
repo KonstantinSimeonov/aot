@@ -9,8 +9,8 @@ type CalculateFibonacci<N extends Number, Fibs extends Int.Int16[]> =
 type f0 = List.From<0, 16>
 type f1 = List.Set<1, 15, f0>
 
-type fibs10 = CalculateFibonacci<10, [f1, f0]>
+type fibs10 = CalculateFibonacci<15, [f1, f0]>
 
 type pretty_fibs = {
-  [k in Exclude<keyof fibs10, keyof unknown[]>]: Int.Show<fibs10[k]>
+  [k in Exclude<keyof fibs10, keyof unknown[]>]: Int.ShowHex<fibs10[k]>
 }
