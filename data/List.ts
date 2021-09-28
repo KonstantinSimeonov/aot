@@ -16,3 +16,5 @@ export type Tail<Tuple extends unknown[]> =
   ((...args: Tuple) => unknown) extends ((_: unknown, ..._1: infer Rest) => unknown)
     ? Rest
     : never
+
+export type Eq<X, Y> = [X, Y] extends [Y, X] ? true : false
