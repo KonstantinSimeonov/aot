@@ -7,31 +7,31 @@ export type _0 = List.From<0, 16>
 export type _1 = List.Set<1, 15, _0>
 
 // stops working around N = 45
-export type FromIntConst<N extends number, Acc extends Int16[] = [_1]> =
+export type FromIntConst<N, Acc extends Int16[] = [_1]> =
   Acc['length'] extends N
     ? Acc[0]
     : FromIntConst<N, [Add16<Acc[0], _1>, ...Acc]>
 
-export type Xor<X extends Bit[], Y extends Bit[]> = {
+export type Xor<X, Y> = {
   [k in keyof X]:
     k extends (keyof Y) & `${number}`
       ? BitXor<X[k], Y[k]>
       : X[k]
 }
 
-export type And<X extends Bit[], Y extends Bit[]> = {
+export type And<X, Y> = {
   [k in keyof X]:
     k extends (keyof Y) & `${number}`
       ? BitAnd<X[k], Y[k]>
       : X[k]
 }
 
-type ShiftLeft1<X extends Bit[]> =
+type ShiftLeft1<X> =
   X extends [infer x, ...infer xs]
     ? [...xs, 0]
     : never
 
-export type Add<X extends Bit[], Y extends Bit[]> =
+export type Add<X, Y> =
   1 extends Y[keyof Y]
     ? Add<Xor<X, Y>, ShiftLeft1<And<X, Y>>>
     : X
@@ -41,14 +41,14 @@ export type Add16<X extends Int16, Y extends Int16> =
     ? Add<X, Y>
     : never
 
-type Flip<X extends Bit[]> = {
+type Flip<X> = {
   [k in keyof X]:
     k extends `${number}`
       ? X[k] extends 0 ? 1 : 0
       : X[k]
 }
 
-export type Subtr<X extends Bit[], Y extends Bit[]> =
+export type Subtr<X, Y> =
   1 extends Y[keyof Y]
     ? Subtr<Xor<X, Y>, ShiftLeft1<And<Flip<X>, Y>>>
     : X
