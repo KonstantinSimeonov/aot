@@ -1,3 +1,5 @@
+import * as Func from './Function';
+
 type BuildList<T, Length extends number, List extends unknown[]> =
   List['length'] extends Length
     ? List
@@ -18,3 +20,15 @@ export type Tail<Tuple extends unknown[]> =
     : never
 
 export type Eq<X, Y> = [X, Y] extends [Y, X] ? true : false
+
+export type LMap<K extends Func.FNames, XS extends any[]> =
+  XS extends [infer H, ...infer Tail]
+    ? [Func.Apply<K, H>, ...LMap<K, Tail>]
+    : []
+
+export type Filter<K extends Func.FNames, XS extends any[]> =
+  XS extends [infer H, ...infer Tail]
+    ? Func.Apply<K, H> extends false | never
+        ? [...Filter<K, Tail>]
+        : [H, ...Filter<K, Tail>]
+    : []
