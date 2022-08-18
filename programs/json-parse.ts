@@ -5,34 +5,34 @@ type Str2Dec<T extends string, Acc extends any[] = []> = `${T}` extends `${Acc['
   : Str2Dec<T, [...Acc, 0]>
 
 type Empty = { __x: never }
-type Failure<T extends string> = { __reason: T }
+type Fail<T extends string, Context = ""> = { __reason: T; __context: Context  }
 
 type ParseInt<T, N extends string = ""> =
   T extends `${infer X}${infer XS}`
     ? X extends Digits
         ? ParseInt<XS, `${N}${X}`>
-        : [N extends "" ? Empty : Str2Dec<N>, T]
-    : [N extends "" ? Empty : Str2Dec<N>, T]
+        : [N extends "" ? Fail<`not a number`, T>: Str2Dec<N>, T]
+    : [N extends "" ? Fail<`not a number`, T> : Str2Dec<N>, T]
 
 type ParseBoolean<T> =
   T extends `true${infer XS}`
     ? [true, XS]
     : T extends `false${infer YS}`
         ? [false, YS]
-        : [Empty, T]
+        : [Fail<`not a bool`, T>, T]
 
 type ParseString<T> = T extends `"${infer Str}"${infer Rest}`
   ? [`"${Str}"`, Rest]
-  : [Empty, T]
+  : [Fail<`not a string`, T>, T]
 
 type OneOf<T> =
   T extends [infer PR, ...infer PRS]
     ? PR extends [infer X, infer XS]
-      ? X extends Empty
+      ? X extends Fail<any, any>
           ? OneOf<PRS>
           : [X, XS]
       : OneOf<PRS>
-    : Empty
+    : Fail<`not a string`, T>
 
 type Comma<T> = T extends `,${infer XS}` ? XS : T
 type Whitespace<T> = T extends `${`\n` | ` ` | `\t` | `\r`}${infer XS}` ? Whitespace<XS> : T
@@ -43,38 +43,38 @@ type ParseArrayItems<T, Result extends any[] = []> =
   T extends `]${infer XS}`
     ? [Result, XS]
     : ParseValue<T> extends [infer V, infer Rest]
-        ? V extends Empty ? [Empty, T] : ParseArrayItems<Whitespace<Comma<Rest>>, [...Result, V]>
-        : [Empty, T]
+        ? V extends Fail<infer Reason, infer Ctx> ? [Fail<`could not parse array value: ${Reason}`, Ctx>, T] : ParseArrayItems<Whitespace<Comma<Rest>>, [...Result, V]>
+        : [Fail<`unexpected token`, T>, T]
 
 type ParseArray<T> =
   T extends `[${infer XS}`
     ? ParseArrayItems<XS>
-    : [Empty, T]
+    : [Fail<`expected [`, T>, T]
 
 type ParseKVP<T> =
   ParseString<T> extends [infer Key, infer Rest]
     ? Key extends `"${infer Key}"`
       ? Whitespace<Rest> extends `:${infer Rest2}`
           ? ParseValue<Whitespace<Rest2>> extends [infer V, infer Rest3]
-              ? V extends Empty ? [Empty, T] : [{ [k in Key]: V }, Rest3]
-              : [Empty, T]
-          : [Empty, T]
-      : [Empty, T]
-    : [Empty, T]
+              ? V extends Fail<infer Reason, infer Ctx> ? [Fail<`could not parse kvp value: ${Reason}`, Ctx>, T] : [{ [k in Key]: V }, Rest3]
+              : [Fail<`parser returned stupid stuff`, T>, T]
+          : [Fail<`expected :`, T>, T]
+      : [Fail<`string parser returned stupid stuff`, T>, T]
+    : [Fail<`whatevs`>, T]
 
 type ParseObjectEntries<T, Obj extends Record<string, any> = {}> =
   T extends `}${infer Rest}`
     ? [{ [k in keyof Obj]: Obj[k] }, Rest]
     : ParseKVP<Whitespace<T>> extends [infer V, infer Rest]
-        ? V extends Empty
-          ? [1, T]
+        ? V extends Fail<infer Reason, infer Ctx>
+          ? [Fail<`parsing entry failed: ${Reason}`, Ctx>, T]
           : ParseObjectEntries<Whitespace<Comma<Whitespace<Rest>>>, Obj & V>
-        : [2, T]
+        : [Fail<`parsing kvp failed`, T>, T]
 
 type ParseObject<T> =
   T extends `{${infer XS}`
     ? ParseObjectEntries<XS>
-    : [Empty, T]
+    : [Fail<`expected {`, T>, T]
 
 type tests = {
   het_array: `[1, "nqkvi raboti", 2, true, 4, "kiril"]`
@@ -97,4 +97,4 @@ type run_tests<T extends Record<string, string>> = {
   [k in keyof T]: ParseValue<T[k]>
 }
 
-type output = run_tests<tests>['object_array_object_array']
+type output = ParseObject<tests['object_array_object_array']>
