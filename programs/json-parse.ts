@@ -1,17 +1,17 @@
-type Digits = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
+type Digits = `0` | `1` | `2` | `3` | `4` | `5` | `6` | `7` | `8` | `9`;
 
 type Str2Dec<
   T extends string,
   Acc extends any[] = []
-> = `${T}` extends `${Acc["length"]}` ? Acc["length"] : Str2Dec<T, [...Acc, 0]>;
+> = `${T}` extends `${Acc[`length`]}` ? Acc[`length`] : Str2Dec<T, [...Acc, 0]>;
 
-type Fail<T extends string, Context = ""> = { __reason: T; __context: Context };
+type Fail<T extends string, Context = ``> = { __reason: T; __context: Context };
 
-type ParseInt<T, N extends string = ""> = T extends `${infer X}${infer XS}`
+type ParseInt<T, N extends string = ``> = T extends `${infer X}${infer XS}`
   ? X extends Digits
     ? ParseInt<XS, `${N}${X}`>
-    : [N extends "" ? Fail<`not a number`, T> : Str2Dec<N>, T]
-  : [N extends "" ? Fail<`not a number`, T> : Str2Dec<N>, T];
+    : [N extends `` ? Fail<`not a number`, T> : Str2Dec<N>, T]
+  : [N extends `` ? Fail<`not a number`, T> : Str2Dec<N>, T];
 
 type ParseBoolean<T> = T extends `true${infer XS}`
   ? [true, XS]
@@ -29,7 +29,7 @@ type OneOf<T> = T extends [infer PR, ...infer PRS]
       ? OneOf<PRS>
       : [X, XS]
     : OneOf<PRS>
-  : Fail<`not a string`, T>;
+  : Fail<`no parser matched`, T>;
 
 type Comma<T> = T extends `,${infer XS}` ? XS : T;
 type Whitespace<T> = T extends `${`\n` | ` ` | `\t` | `\r`}${infer XS}`
@@ -94,6 +94,7 @@ type tests = {
   false: `false`;
   string: `"testyyy"`;
   object_array_object_array: `{ "nesting": [{ "nesting2": [1, 2, 3] }] }`;
+  empty_array: `[]`
 };
 
 type run_tests<T extends Record<string, string>> = {
