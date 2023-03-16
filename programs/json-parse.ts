@@ -13,11 +13,9 @@ type ParseInt<
   T,
   _n extends string = ``,
   _result = _n extends `` ? Fail<`not a number`, T> : Success<Str2Dec<_n>, T>
-> = T extends `${infer D}${infer XS}`
-  ? D extends Digits
-    ? ParseInt<XS, `${_n}${D}`>
-    : _result
-  : _result;
+> = T extends `${infer D extends Digits}${infer XS}`
+  ? ParseInt<XS, `${_n}${D}`>
+  : _result
 
 type ParseBoolean<T> = T extends `true${infer XS}`
   ? Success<true, XS>
