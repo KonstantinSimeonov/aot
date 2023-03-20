@@ -1,4 +1,4 @@
-import { Add, Subtr, LT } from './data/Int'
+import { Add, Subtr, LT } from "./data/Int"
 
 type x = [0, 1, 0, 1, 1] // 11
 type y = [0, 1, 1, 1, 0] // 14

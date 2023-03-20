@@ -5,5 +5,8 @@
   "license": "MIT",
   "dependencies": {
     "typescript": "latest"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.5"
   }
 }
