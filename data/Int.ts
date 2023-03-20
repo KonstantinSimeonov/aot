@@ -2,6 +2,7 @@ import { Bit, And as BitAnd, Xor as BitXor } from './Bit'
 import * as List from './List'
 
 export type Int16 = List.From<Bit, 16>
+export type Int = Bit[]
 
 export type _0 = List.From<0, 16>
 export type _1 = List.Set<1, 15, _0>
@@ -25,6 +26,32 @@ export type And<X, Y> = {
       ? BitAnd<X[k], Y[k]>
       : X[k]
 }
+
+/**
+ * @description
+ * Truncates an int to its leftmost 16 bits
+ * @param X - the int to truncate
+ *
+ * @returns Int16
+ */
+type Trunc<X extends Int> =
+  X extends { length: 16 }
+    ? X
+    : X extends [any, ...infer Rest extends Int]
+        ? Trunc<Rest>
+        : never
+
+export type Mult<X extends Int, Y, Res extends Int = _0, Pow extends Int = []> =
+  Y extends [...infer Rest, infer P]
+    ? P extends 0
+        ? Mult<X, Rest, Res, [...Pow, 0]>
+        : Add<Trunc<[...X, ...Pow]>, Res> extends Int ? Mult<
+              X,
+              Rest,
+              Add<Trunc<[...X, ...Pow]>,Res>,
+              [...Pow, 0]
+          > : never
+    : Res
 
 type ShiftLeft1<X> =
   X extends [infer x, ...infer xs]
