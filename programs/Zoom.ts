@@ -18,4 +18,4 @@ type Zoom<Keys, T> = Keys extends []
   : never
 
 // the type-level equivalent of the runtime person.friends.get(somestring)?.hobbies[somenumber].since
-type x = Zoom<["friends", string, "hobbies", number, "since"], Person>
+type o = Zoom<["friends", string, "hobbies", number, "since"], Person>
