@@ -11,6 +11,23 @@ Various fun programs using the typescript type language only. Witness the techno
 - TS provides no type-level arithmetic
 - The compiler bails out of computing types of certain recursive depth (2000 is too much for example)
 
+### Output
+You'll need either bun or tsnode or to compile the `run.ts` file with `tsc`. The `run.ts` file uses the typescript compiler api to print the values of type declarations. Or just hover a symbol in your editor, if you have tooling set up.
+
+```shell
+npm i
+
+# bun
+bun run run.ts programs/sieve.ts
+
+# ts-node
+ts-node run.ts programs/sieve.ts
+
+# manually
+./node_modules/.bin/tsc --target es6 --moduleResolution node --module commonjs run.ts
+node run.js progres/sieve.ts
+```
+
 ### Standard library
 
 |             module             |                                                     description                                                      |

@@ -1,6 +1,6 @@
 import * as ts from "typescript"
 
-const hl = (x: string) => `\033[94;1;40m${x}\033[0m`
+const hl = (x: string) => `\u001b[94;1;40m${x}\u001b[0m`
 
 const run = (file: string) => {
   const prg = ts.createProgram([file], {})
