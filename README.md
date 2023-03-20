@@ -14,7 +14,7 @@ Various fun programs using the typescript type language only. Witness the techno
 ### Output
 You'll need either bun or tsnode or to compile the `run.ts` file with `tsc`. The `run.ts` file uses the typescript compiler api to print the values of type declarations. Or just hover a symbol in your editor, if you have tooling set up.
 
-```shell
+```bash
 npm i
 
 # bun
@@ -25,7 +25,7 @@ ts-node run.ts programs/sieve.ts
 
 # manually
 ./node_modules/.bin/tsc --target es6 --moduleResolution node --module commonjs run.ts
-node run.js progres/sieve.ts
+node run.js programs/sieve.ts
 ```
 
 ### Standard library
@@ -39,10 +39,10 @@ node run.js progres/sieve.ts
 ### Programs
 
 - [bracket balancing](./programs/balance-brackets.ts)
-- [fibonacci numbers](./programs/Fibonacci.ts)
-- [fizzbuzz](./programs/FizzBuzz.ts)
+- [fibonacci numbers](./programs/fibonacci.ts)
+- [fizzbuzz](./programs/fizzbuzz.ts)
 - [parsing json from a string](./programs/json-parse.ts)
 - [sieve of erastothenes](./programs/sieve.ts)
 - [transform object keys from camel to snake case](./programs/transform-object-keys.ts)
 - [split string by separator](./data/String.ts)
-- [higher order types](./programs/FunctionApplication.ts)
+- [higher order types](./programs/higher-order-functions.ts)
