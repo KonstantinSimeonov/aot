@@ -1,6 +1,7 @@
 /** @type {import("prettier").Config} */
 const config = {
-  semi: false
+  semi: false,
+  arrowParens: `avoid`
 }
 
 module.exports = config

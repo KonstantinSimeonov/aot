@@ -1,4 +1,5 @@
 import * as Int from "../data/Int"
+import { Pretty } from "../share/pretty"
 
 type Mark<
   End extends Int.Int16,
@@ -21,4 +22,4 @@ type Sieve<
       Table & (Table[Int.ShowHex<I>] extends false ? {} : Mark<End, I>)
     >
 
-type z = Sieve<Int.FromIntConst<30>>
+type sieve_30 = Pretty<Sieve<Int.FromIntConst<30>>>

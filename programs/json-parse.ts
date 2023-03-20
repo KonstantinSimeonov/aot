@@ -1,4 +1,5 @@
-export {}
+import { Pretty } from "../share/pretty"
+
 type Digits = `0` | `1` | `2` | `3` | `4` | `5` | `6` | `7` | `8` | `9`
 
 type Str2Dec<
@@ -91,8 +92,10 @@ type tests = {
   empty_array: `[]`
 }
 
+
+
 type run_tests<T extends Record<string, string>> = {
   [k in keyof T]: ParseValue<T[k]>
 }
 
-type output = run_tests<tests>
+type output = Pretty<run_tests<tests>>
